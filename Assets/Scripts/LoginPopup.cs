@@ -257,8 +257,8 @@ public class LoginPopup : MonoBehaviour
 
     void InitializeWeb3()
     {
+        Debug.Log("Setting Up Web3");
         MoralisInterface.SetupWeb3();
-
         MoralisInterface.InsertContractInstance(ContractData.REWARD_KEY, 
             rewardAbi.text, "polygon", ContractData.REWARD_CONTRACT);
     }

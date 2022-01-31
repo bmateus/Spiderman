@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class WinTrigger : MonoBehaviour
@@ -9,8 +10,14 @@ public class WinTrigger : MonoBehaviour
 	{
 		if (!hasTriggered)
 		{
-			GameManager.Instance.Win();
-			hasTriggered = true;
+			StartCoroutine(WinSequence());
 		}
+	}
+
+	IEnumerator WinSequence()
+    {
+		yield return new WaitForSeconds(1f);
+		GameManager.Instance.Win();
+		hasTriggered = true;
 	}
 }

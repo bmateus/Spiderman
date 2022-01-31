@@ -143,18 +143,17 @@ public class Spiderman : MonoBehaviour
         if (transform.position.y < -3)
         {
             //yer dead
-            rigidBody.simulated = false;
-            spriteRenderer.enabled = false;
-
+            SetGameOver();
             sfx.PlayOneShot(deathSfx);
             GameManager.Instance.ShowGameOver();
-            SetGameOver();
         }
     }
 
 
     public void SetGameOver()
     {
+        rigidBody.simulated = false;
+        spriteRenderer.enabled = false;
         gameOver = true;
     }
 
