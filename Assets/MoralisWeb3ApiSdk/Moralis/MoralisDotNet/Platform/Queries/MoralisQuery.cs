@@ -707,8 +707,6 @@ namespace Moralis.Platform.Queries
 
             if (Filters != null)
                 result["where"] = JsonSerializer.Serialize(Filters);//PointerOrLocalIdEncoder.Instance.Encode(Filters, Services);
-            else
-                result["where"] = new object();
             if (Orderings != null)
                 result["order"] = String.Join(",", Orderings.ToArray());
             if (SkipAmount != null)

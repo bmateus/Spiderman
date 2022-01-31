@@ -282,19 +282,38 @@ public class LoginPopup : MonoBehaviour
             Destroy(scoreRoot.GetChild(i).gameObject);
         }
 
-        var query = MoralisInterface.GetClient().Query<SpideyScores>()
-            .WhereExists("Time")
-            .OrderByDescending("Time")
-            .Limit(10);
-        var results = await query.FindAsync();
-        Debug.Log(results);
-        
-        foreach(var entry in results)
+        try
         {
-            var obj = Instantiate(scorePrefab, scoreRoot);
-            var tmp = obj.GetComponentInChildren<TMP_Text>();
-            tmp.text = $"{entry.Name} - {entry.Seconds}s";
-        }        
+            var query = MoralisInterface.GetClient().Query<SpideyScores>()
+                .OrderBy("Seconds")
+                .Limit(10);
+            var results = new List<SpideyScores>(await query.FindAsync());
+
+            Debug.Log($"Query Results:{results}");
+
+            if (results.Count == 0)
+            {
+                results.Add(new SpideyScores() { Name = "Stan Lee", Seconds = 120.4f });
+                results.Add(new SpideyScores() { Name = "Peter Parker", Seconds = 136.4f });
+                results.Add(new SpideyScores() { Name = "Mary Jane Watson", Seconds = 270.1f });
+                results.Add(new SpideyScores() { Name = "Norman Osborn", Seconds = 536.4f });
+            }
+
+
+            int count = 0;
+            foreach (var entry in results)
+            {
+                var obj = Instantiate(scorePrefab, scoreRoot);
+                var tmp = obj.GetComponentInChildren<TMP_Text>();
+                count++;
+                tmp.text = $"{count}) {entry.Name} - {entry.Seconds}s";
+            }
+
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogException(ex);
+        }
     }
 
 

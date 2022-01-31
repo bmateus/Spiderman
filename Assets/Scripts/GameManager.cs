@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
         var addr = user.authData["moralisEth"]["id"].ToString();
         var ens = MoralisInterface.GetClient().Web3Api.Resolve.ResolveAddress(addr);
         var score = MoralisInterface.GetClient().Create<SpideyScores>();
-        score.Name = !string.IsNullOrEmpty(ens.Name) ? ens.Name : MoralisInterface.GetClient().EthAddress;
+        score.Name = !string.IsNullOrEmpty(ens.Name) ? ens.Name : addr;
         score.Seconds = game.TimeElapsed;
         await score.SaveAsync();
         Debug.Log("SavedScore");

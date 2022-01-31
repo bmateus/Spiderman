@@ -38,14 +38,29 @@ public class Spiderman : MonoBehaviour
 
     bool gameOver = false;
 
+    [SerializeField]
+    AudioSource sfx;
+
+    [SerializeField]
+    AudioClip jumpSfx;
+
+    [SerializeField]
+    AudioClip deathSfx;
+
+    Rigidbody2D rigidBody;
+
 	private void Start()
 	{
         spawnPos = transform.position;
+        rigidBody = GetComponent<Rigidbody2D>();
 	}
 
 
 	private void Update()
 	{
+        if (gameOver)
+            return;
+
 		move = Input.GetAxisRaw("Horizontal") * moveSpeed;
 
         spideyAnimator.SetFloat("move", Mathf.Abs(move));
@@ -55,6 +70,7 @@ public class Spiderman : MonoBehaviour
 
             jump = true;
             web.enabled = false;
+            sfx.PlayOneShot(jumpSfx);
 		}
 
         if (Input.GetButtonDown("Crouch"))
@@ -96,6 +112,9 @@ public class Spiderman : MonoBehaviour
 
 	void FixedUpdate()
     {
+        if (gameOver)
+            return;
+
         controller.Move(move * Time.fixedDeltaTime, crouch, jump);
         jump = false;
 
@@ -112,7 +131,7 @@ public class Spiderman : MonoBehaviour
                 //zoom towards the web target
                 var dir = (webTarget - transform.position).normalized;
                 var force = 100f;
-                GetComponent<Rigidbody2D>().AddForce(dir * force);
+                rigidBody.AddForce(dir * force);
             }
             else
 			{
@@ -124,8 +143,12 @@ public class Spiderman : MonoBehaviour
         if (transform.position.y < -3)
         {
             //yer dead
+            rigidBody.simulated = false;
+            spriteRenderer.enabled = false;
+
+            sfx.PlayOneShot(deathSfx);
             GameManager.Instance.ShowGameOver();
-            //transform.position = spawnPos;
+            SetGameOver();
         }
     }
 
